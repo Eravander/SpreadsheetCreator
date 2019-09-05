@@ -1,0 +1,10 @@
+C:\Users\Dom\source\repos\SpreadsheetCreator\SpreadsheetCreator\SpreadSheet Creator\bin\Debug\SpreadSheet Creator.exe.config
+C:\Users\Dom\source\repos\SpreadsheetCreator\SpreadsheetCreator\SpreadSheet Creator\bin\Debug\SpreadSheet Creator.exe
+C:\Users\Dom\source\repos\SpreadsheetCreator\SpreadsheetCreator\SpreadSheet Creator\bin\Debug\SpreadSheet Creator.pdb
+C:\Users\Dom\source\repos\SpreadsheetCreator\SpreadsheetCreator\SpreadSheet Creator\obj\Debug\SpreadSheet Creator.csprojAssemblyReference.cache
+C:\Users\Dom\source\repos\SpreadsheetCreator\SpreadsheetCreator\SpreadSheet Creator\obj\Debug\SpreadSheet_Creator.Form1.resources
+C:\Users\Dom\source\repos\SpreadsheetCreator\SpreadsheetCreator\SpreadSheet Creator\obj\Debug\SpreadSheet_Creator.Properties.Resources.resources
+C:\Users\Dom\source\repos\SpreadsheetCreator\SpreadsheetCreator\SpreadSheet Creator\obj\Debug\SpreadSheet Creator.csproj.GenerateResource.cache
+C:\Users\Dom\source\repos\SpreadsheetCreator\SpreadsheetCreator\SpreadSheet Creator\obj\Debug\SpreadSheet Creator.csproj.CoreCompileInputs.cache
+C:\Users\Dom\source\repos\SpreadsheetCreator\SpreadsheetCreator\SpreadSheet Creator\obj\Debug\SpreadSheet Creator.exe
+C:\Users\Dom\source\repos\SpreadsheetCreator\SpreadsheetCreator\SpreadSheet Creator\obj\Debug\SpreadSheet Creator.pdb

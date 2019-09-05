@@ -12,6 +12,7 @@ namespace SpreadSheet_Creator
 {
     public partial class Form1 : Form
     {
+        
         List<string> list;
         public Form1()
         {
@@ -27,7 +28,17 @@ namespace SpreadSheet_Creator
             foreach (string str in list)
                 sb.AppendLine(str);
             MessageBox.Show(sb.ToString());
+
+            Excel ex = new Excel();
+            ex.CreateNewFile();
+            ex.SaveAs(@"Test");
+            ex.Close();
+
+            //ReadData();
+            WriteData();
+
         }
+
 
         private void ListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
         {
@@ -47,6 +58,22 @@ namespace SpreadSheet_Creator
         private void ListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        public void ReadData()
+        {
+            Excel ex = new Excel(@"Test", 1);
+            string[,] read = ex.ReadRange(1, 1, 2749, 3);
+            ex.Close();
+        }
+        public void WriteData()
+        {
+            Excel excel = new Excel(@"Test.xlsx", 1);
+            excel.WriteToCell(0, 0, "Test2");
+            excel.Save();
+            excel.SaveAs(@"Test.xlsx");
+
+            excel.Close();
         }
     }
 }

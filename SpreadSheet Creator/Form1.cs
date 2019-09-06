@@ -7,6 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Reflection;
+using System.Data.SqlClient;
+using System.Runtime.InteropServices;
+using SQL = System.Data;
+using Microsoft.Office.Interop.Excel;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace SpreadSheet_Creator
 {
@@ -24,18 +30,90 @@ namespace SpreadSheet_Creator
 
         private void GenBtn_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (string str in list)
-                sb.AppendLine(str);
-            MessageBox.Show(sb.ToString());
+            string conString = "Data Source=PLACEHOLDER;Initial Catalog=PLACEHOLDER;Integrated Security=True";
+            StringBuilder query = new StringBuilder();
+            query.Append("SELECT [Show Code], [Date 1]");
+            query.Append("FROM [Master_Show_File].[dbo].[DATA_F19] ");
 
-            Excel ex = new Excel();
-            ex.CreateNewFile();
-            ex.SaveAs(@"Test");
-            ex.Close();
+            SQL.DataTable showData = new SQL.DataTable();
+            using (SqlConnection cn = new SqlConnection(conString))
+            {
+                using (SqlDataAdapter da = new SqlDataAdapter(query.ToString(), cn))
+                {
+                    da.Fill(showData);
+                }
+            }
 
-            //ReadData();
-            WriteData();
+            Excel.Application oXL;
+            Excel._Workbook oWB;
+            Excel._Worksheet oSheet;
+
+            oXL = new Excel.Application();
+            oXL.Visible = true;
+
+            oWB = (Excel._Workbook)(oXL.Workbooks.Add(Missing.Value));
+            oSheet = (Excel._Worksheet)oWB.ActiveSheet;
+
+            try
+            {
+                SQL.DataTable dtCategories = showData.DefaultView.ToTable(true, "ShowCode");
+
+                foreach (SQL.DataRow show in dtCategories.Rows)
+                {
+                    oSheet = (Excel._Worksheet)oXL.Worksheets.Add();
+                    oSheet.Name = show[0].ToString().Replace(" ", "").Replace("  ", "").Replace("/", "").Replace("\\", "").Replace("*", "");
+
+                    string[] colNames = new string[showData.Columns.Count];
+
+                    int col = 0;
+
+                    foreach (SQL.DataColumn dc in showData.Columns)
+                        colNames[col++] = dc.ColumnName;
+
+                    char lastColumn = (char)(65 + showData.Columns.Count - 1);
+
+                    oSheet.get_Range("A1", lastColumn + "1").Value2 = colNames;
+                    oSheet.get_Range("A1", lastColumn + "1").Font.Bold = true;
+                    oSheet.get_Range("A1", lastColumn + "1").VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+
+                    SQL.DataRow[] dr = showData.Select(string.Format("ShowCode='{0}'", show[0].ToString()));
+
+                    string[,] rowData = new string[dr.Count<SQL.DataRow>(), showData.Columns.Count];
+
+                    int rowCnt = 0;
+                    int redRows = 2;
+                    foreach (SQL.DataRow row in dr)
+                    {
+                        for (col = 0; col < showData.Columns.Count; col++)
+                        {
+                            rowData[rowCnt, col] = row[col].ToString();
+                        }
+
+                        if (int.Parse(row["ReorderLevel"].ToString()) < int.Parse(row["UnitsOnOrder"].ToString()))
+                        {
+                            Range range = oSheet.get_Range("A" + redRows.ToString(), "J" + redRows.ToString());
+                            range.Cells.Interior.Color = System.Drawing.Color.Red;
+                        }
+                        redRows++;
+                        rowCnt++;
+                    }
+                    oSheet.get_Range("A2", lastColumn + rowCnt.ToString()).Value2 = rowData;
+                }
+
+                oXL.Visible = true;
+                oXL.UserControl = true;
+
+                oWB.SaveAs("ShowData.xlsx",
+                    AccessMode: Excel.XlSaveAsAccessMode.xlShared);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                Marshal.ReleaseComObject(oWB);
+            }
 
         }
 
@@ -60,20 +138,20 @@ namespace SpreadSheet_Creator
 
         }
 
-        public void ReadData()
-        {
-            Excel ex = new Excel(@"Test", 1);
-            string[,] read = ex.ReadRange(1, 1, 2749, 3);
-            ex.Close();
-        }
-        public void WriteData()
-        {
-            Excel excel = new Excel(@"Test.xlsx", 1);
-            excel.WriteToCell(0, 0, "Test2");
-            excel.Save();
-            excel.SaveAs(@"Test.xlsx");
+        //public void ReadData()
+        //{
+        //    Excel ex = new Excel(@"Test", 1);
+        //    string[,] read = ex.ReadRange(1, 1, 2749, 3);
+        //    ex.Close();
+        //}
+        //public void WriteData()
+        //{
+        //    Excel excel = new Excel(@"Test.xlsx", 1);
+        //    excel.WriteToCell(0, 0, "Test2");
+        //    excel.Save();
+        //    excel.SaveAs(@"Test.xlsx");
 
-            excel.Close();
-        }
+        //    excel.Close();
+        //}
     }
 }

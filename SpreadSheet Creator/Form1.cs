@@ -56,7 +56,7 @@ namespace SpreadSheet_Creator
             oWB = (Excel._Workbook)(oXL.Workbooks.Add(Missing.Value));
             oSheet = (Excel._Worksheet)oWB.ActiveSheet;
            
-            //Import data from SQL table to newly created excelt spreadsheet
+            //Import data from SQL table to newly created excel spreadsheet
             try
             {
                 SQL.DataTable dtCategories = showData.DefaultView.ToTable(true, "Show Code");

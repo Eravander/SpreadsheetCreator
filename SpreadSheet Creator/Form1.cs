@@ -59,7 +59,7 @@ namespace SpreadSheet_Creator
             //Import data from SQL table to newly created excelt spreadsheet
             try
             {
-                SQL.DataTable dtCategories = showData.DefaultView.ToTable(true, "ShowCode");
+                SQL.DataTable dtCategories = showData.DefaultView.ToTable(true, "Show Code");
 
                 foreach (SQL.DataRow show in dtCategories.Rows)
                 {
@@ -79,7 +79,7 @@ namespace SpreadSheet_Creator
                     oSheet.get_Range("A1", lastColumn + "1").Font.Bold = true;
                     oSheet.get_Range("A1", lastColumn + "1").VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
 
-                    SQL.DataRow[] dr = showData.Select(string.Format("ShowCode='{0}'", show[0].ToString()));
+                    SQL.DataRow[] dr = showData.Select(string.Format("Show Code='{0}'", show[0].ToString()));
 
                     string[,] rowData = new string[dr.Count<SQL.DataRow>(), showData.Columns.Count];
 

@@ -30,7 +30,8 @@ namespace SpreadSheet_Creator
 
         private void GenBtn_Click(object sender, EventArgs e)
         {
-            string conString = "Data Source=PLACEHOLDER;Initial Catalog=PLACEHOLDER;Integrated Security=True";
+            //Connect to Database
+            string conString = "Data Source=localhost;Initial Catalog=master_show_file;Integrated Security=True";
             StringBuilder query = new StringBuilder();
             query.Append("SELECT [Show Code], [Date 1]");
             query.Append("FROM [Master_Show_File].[dbo].[DATA_F19] ");
@@ -43,7 +44,8 @@ namespace SpreadSheet_Creator
                     da.Fill(showData);
                 }
             }
-
+           
+            //configure excel
             Excel.Application oXL;
             Excel._Workbook oWB;
             Excel._Worksheet oSheet;
@@ -53,7 +55,8 @@ namespace SpreadSheet_Creator
 
             oWB = (Excel._Workbook)(oXL.Workbooks.Add(Missing.Value));
             oSheet = (Excel._Worksheet)oWB.ActiveSheet;
-
+           
+            //Import data from SQL table to newly created excelt spreadsheet
             try
             {
                 SQL.DataTable dtCategories = showData.DefaultView.ToTable(true, "ShowCode");
@@ -80,6 +83,7 @@ namespace SpreadSheet_Creator
 
                     string[,] rowData = new string[dr.Count<SQL.DataRow>(), showData.Columns.Count];
 
+                    //Placeholder code for conditional formatting pulled from examples found online
                     int rowCnt = 0;
                     int redRows = 2;
                     foreach (SQL.DataRow row in dr)

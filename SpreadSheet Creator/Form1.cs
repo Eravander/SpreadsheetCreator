@@ -22,6 +22,7 @@ namespace SpreadSheet_Creator
         List<string> list;
         public Form1()
         {
+            //These check boxes would ideally be used to select Current and Future seasons
             InitializeComponent();
             list = new List<string>();
             listBox1.Items.AddRange(new string[] { "FA19", "SP20" });
@@ -45,7 +46,7 @@ namespace SpreadSheet_Creator
                 }
             }
            
-            //configure excel
+            //configure excel, this will eventually create 2 sheets. One for Alpha and one for Chrono
             Excel.Application oXL;
             Excel._Workbook oWB;
             Excel._Worksheet oSheet;
@@ -59,9 +60,9 @@ namespace SpreadSheet_Creator
             //Import data from SQL table to newly created excel spreadsheet
             try
             {
-                SQL.DataTable dtCategories = showData.DefaultView.ToTable(true, "Show Code");
+                SQL.DataTable dtShows = showData.DefaultView.ToTable(true, "Show Code");
 
-                foreach (SQL.DataRow show in dtCategories.Rows)
+                foreach (SQL.DataRow show in dtShows.Rows)
                 {
                     oSheet = (Excel._Worksheet)oXL.Worksheets.Add();
                     oSheet.Name = show[0].ToString().Replace(" ", "").Replace("  ", "").Replace("/", "").Replace("\\", "").Replace("*", "");
@@ -92,12 +93,16 @@ namespace SpreadSheet_Creator
                         {
                             rowData[rowCnt, col] = row[col].ToString();
                         }
+                        //CompareDate method should go here, if the Date is re moved then continue to next row.
 
-                        if (int.Parse(row["ReorderLevel"].ToString()) < int.Parse(row["UnitsOnOrder"].ToString()))
+                        //This if statement should begin the process of evaluating how far out the showdate is. Then set conditional formatting based on weeks out.
+                        if (DateTime.Parse(row["Date 1"].ToString()) < DateTime.Parse(row["Date 1"].ToString()))
                         {
                             Range range = oSheet.get_Range("A" + redRows.ToString(), "J" + redRows.ToString());
                             range.Cells.Interior.Color = System.Drawing.Color.Red;
                         }
+
+                        //Placeholder
                         redRows++;
                         rowCnt++;
                     }
@@ -119,6 +124,16 @@ namespace SpreadSheet_Creator
                 Marshal.ReleaseComObject(oWB);
             }
 
+        }
+
+        //Use this to compare Show Date to current date
+        public static void CompareDate(DateTime t1, DateTime t2)
+        {
+            //The idea here is to figure out how to parse the DateTime then store it in a variable to be compared, then if it is less than the current date the row is omitted. 
+            if(t1 < t2)
+            {
+
+            }
         }
 
 
